@@ -7,91 +7,171 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 20px;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
         }
+
+        .container {
+            max-width: 1300px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
         table {
             border-collapse: collapse;
             width: 100%;
-            margin-bottom: 20px;
+            margin: 20px 0;
         }
+
         th, td {
             border: 1px solid #ddd;
-            padding: 8px;
+            padding: 10px;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        td input {
+            width: 80%;
+            padding: 5px;
+            font-size: 14px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
             text-align: center;
         }
-        th {
-            background-color: #f2f2f2;
-        }
+
         .result {
             margin-top: 20px;
-            padding: 10px;
+            padding: 20px;
             border: 1px solid #ddd;
             background-color: #f9f9f9;
+            border-radius: 10px;
+            font-size: 16px;
+            line-height: 1.6;
         }
+
         button {
             padding: 10px 20px;
             background-color: #4CAF50;
             color: white;
             border: none;
+            border-radius: 5px;
             cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s ease;
         }
+
         button:hover {
             background-color: #45a049;
         }
+
         .delete-btn {
             background-color: #f44336;
-            color: white;
         }
+
         .delete-btn:hover {
             background-color: #d32f2f;
+        }
+
+        .add-btn {
+            display: block;
+            margin: 10px auto;
+            width: 150px;
+            text-align: center;
+        }
+
+        .soju-inputs {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .soju-inputs input {
+            width: 60px;
+            padding: 5px;
+            font-size: 14px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+
+            table, th, td {
+                font-size: 12px;
+            }
+
+            .soju-inputs {
+                flex-direction: column;
+                align-items: center;
+            }
         }
     </style>
 </head>
 <body>
-    <h1>소주 기준 음주 계산기</h1>
-    <table>
-        <thead>
-            <tr>
-                <th>no</th>
-                <th>종류</th>
-                <th>도수</th>
-                <th>ml</th>
-                <th>병</th>
-                <th>ml (병 기준)</th>
-                <th>ml * 도수</th>
-                <th>삭제</th>
-            </tr>
-        </thead>
-        <tbody id="alcoholTable">
-            <tr>
-                <td>1</td>
-                <td><input type="text" id="type1" value="막걸리"></td>
-                <td><input type="number" id="dosu1" value="6"></td>
-                <td><input type="number" id="ml1" value="0" onchange="calculateRow(1)"></td>
-                <td><input type="number" id="bottle1" value="0" onchange="calculateRow(1)"></td>
-                <td id="mlBottle1">0</td>
-                <td id="mlDosu1">0</td>
-                <td><button class="delete-btn" onclick="deleteRow(1)">삭제</button></td>
-            </tr>
-        </tbody>
-    </table>
+    <div class="container">
+        <h1>소주 기준 음주 계산기</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>no</th>
+                    <th>종류</th>
+                    <th>도수</th>
+                    <th>ml</th>
+                    <th>병</th>
+                    <th>ml (병 기준)</th>
+                    <th>ml * 도수</th>
+                    <th>삭제</th>
+                </tr>
+            </thead>
+            <tbody id="alcoholTable">
+                <tr>
+                    <td>1</td>
+                    <td><input type="text" id="type1" value="막걸리"></td>
+                    <td><input type="number" id="dosu1" value="6"></td>
+                    <td><input type="number" id="ml1" value="0" onchange="calculateRow(1)"></td>
+                    <td><input type="number" id="bottle1" value="0" onchange="calculateRow(1)"></td>
+                    <td id="mlBottle1">0</td>
+                    <td id="mlDosu1">0</td>
+                    <td><button class="delete-btn" onclick="deleteRow(1)">삭제</button></td>
+                </tr>
+            </tbody>
+        </table>
 
-    <button onclick="addRow()">항목 추가</button>
+        <button class="add-btn" onclick="addRow()">항목 추가</button>
 
-    <div>
-        <label>소주 기준:</label>
-        <input type="number" id="sojuMl" value="360"> ml,
-        <input type="number" id="sojuDosu" value="16"> 도수
+        <div class="soju-inputs">
+            <label>소주 기준:</label>
+            <input type="number" id="sojuMl" value="360"> ml,
+            <input type="number" id="sojuDosu" value="16"> 도수
+        </div>
+
+        <div class="result">
+            <p>총 ml * 도수 합계: <span id="totalMlDosu">0</span></p>
+            <p>총 ml 합계: <span id="totalMl">0</span></p>
+            <p>소주 기준 도수: <span id="calculatedSoju">0</span></p>
+            <p>결과: <span id="resultText">소주 기준 0만큼 마셨습니다.</span></p>
+        </div>
+
+        <button onclick="calculateTotal()">계산</button>
     </div>
-
-    <div class="result">
-        <p>총 ml * 도수 합계: <span id="totalMlDosu">0</span></p>
-        <p>총 ml 합계: <span id="totalMl">0</span></p>
-        <p>소주 기준 도수: <span id="calculatedSoju">0</span></p>
-        <p>결과: <span id="resultText">소주 기준 0만큼 마셨습니다.</span></p>
-    </div>
-
-    <button onclick="calculateTotal()">계산</button>
 
     <script>
         let rowCount = 1;
@@ -140,18 +220,21 @@
                 <td>${rowCount}</td>
                 <td><input type="text" id="type${rowCount}" value=""></td>
                 <td><input type="number" id="dosu${rowCount}" value="0"></td>
-                <td><input type="number" id="ml${rowCount}" value="0" onchange="calculateRow(${rowCount})"></td>
-                <td><input type="number" id="bottle${rowCount}" value="0" onchange="calculateRow(${rowCount})"></td>
-                <td id="mlBottle${rowCount}">0</td>
-                <td id="mlDosu${rowCount}">0</td>
-                <td><button class="delete-btn" onclick="deleteRow(${rowCount})">삭제</button></td>
-            `;
+                <td><input type="number" id="ml${rowCount}" value="0" onchange="calculateRow(${
+<td><input type="number" id="bottle${rowCount}" value="0" onchange="calculateRow(${rowCount})"></td>
+<td id="mlBottle${rowCount}">0</td>
+<td id="mlDosu${rowCount}">0</td>
+<td><button class="delete-btn" onclick="deleteRow(${rowCount})">삭제</button></td>
+`;
         }
 
         function deleteRow(row) {
             const rowElement = document.getElementById(`ml${row}`).closest('tr');
-            rowElement.remove();
+            if (rowElement) {
+                rowElement.remove();
+            }
         }
     </script>
 </body>
 </html>
+
