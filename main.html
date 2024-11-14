@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>소주 기준 음주 계산기</title>
+    <title>음주 계산기</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -127,7 +127,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>소주 기준 음주 계산기</h1>
+        <h1>음주 계산기</h1>
         <table>
             <thead>
                 <tr>
@@ -136,17 +136,17 @@
                     <th>도수</th>
                     <th>ml</th>
                     <th>병</th>
-                    <th>ml (병 기준)</th>
-                    <th>ml * 도수</th>
+                    <th>총량(ml*병)</th>
+                    <th>총량*도수</th>
                     <th>삭제</th>
                 </tr>
             </thead>
             <tbody id="alcoholTable">
                 <tr>
                     <td>1</td>
-                    <td><input type="text" id="type1" value="막걸리"></td>
-                    <td><input type="number" id="dosu1" value="6"></td>
-                    <td><input type="number" id="ml1" value="0" onchange="calculateRow(1)"></td>
+                    <td><input type="text" id="type1" value="소주"></td>
+                    <td><input type="number" id="dosu1" value="16"></td>
+                    <td><input type="number" id="ml1" value="360" onchange="calculateRow(1)"></td>
                     <td><input type="number" id="bottle1" value="0" onchange="calculateRow(1)"></td>
                     <td id="mlBottle1">0</td>
                     <td id="mlDosu1">0</td>
@@ -158,15 +158,15 @@
         <button class="add-btn" onclick="addRow()">항목 추가</button>
 
         <div class="soju-inputs">
-            <label>소주 기준:</label>
-            <input type="number" id="sojuMl" value="360"> ml,
-            <input type="number" id="sojuDosu" value="16"> 도수
+            <label>소주 기준 :</label>
+            <input type="number" id="sojuMl" value="360" disabled> ml,
+            <input type="number" id="sojuDosu" value="16" disabled> 도수
         </div>
 
         <div class="result">
             <p>총 ml * 도수 합계: <span id="totalMlDosu">0</span></p>
             <p>총 ml 합계: <span id="totalMl">0</span></p>
-            <p>소주 기준 도수: <span id="calculatedSoju">0</span></p>
+            <p>도수: <span id="calculatedSoju">0</span></p>
             <p>결과: <span id="resultText">소주 기준 0만큼 마셨습니다.</span></p>
         </div>
 
@@ -180,10 +180,10 @@
             const ml = parseFloat(document.getElementById(`ml${row}`).value) || 0;
             const bottle = parseFloat(document.getElementById(`bottle${row}`).value) || 0;
             const dosu = parseFloat(document.getElementById(`dosu${row}`).value) || 0;
-            const bottleMl = bottle * 500; // Assuming a standard bottle size of 500ml
+            const bottleMl = bottle * ml; // ml * bottle
 
-            const totalMl = ml + bottleMl;
-            const mlDosu = totalMl * (dosu / 100);
+            //const totalMl = ml + bottleMl;
+            const mlDosu = bottleMl * dosu;
 
             document.getElementById(`mlBottle${row}`).innerText = bottleMl;
             document.getElementById(`mlDosu${row}`).innerText = mlDosu;
@@ -196,20 +196,20 @@
             for (let i = 1; i <= rowCount; i++) {
                 if (document.getElementById(`mlDosu${i}`)) {
                     totalMl += parseFloat(document.getElementById(`mlBottle${i}`).innerText) || 0;
-                    totalMlDosu += parseFloat(document.getElementById(`mlDosu${i}`).innerText) || 0;
+                    totalMlDosu += parseFloat(document.getElementById(`mlDosu${i}`).innerText) || 0;   // 총 ml*도수의 합
                 }
             }
 
+            const calculatedSoju = (totalMlDosu / totalMl).toFixed(2);
+
             const sojuMl = parseFloat(document.getElementById('sojuMl').value);
             const sojuDosu = parseFloat(document.getElementById('sojuDosu').value);
-            const sojuStandard = sojuMl * (sojuDosu / 100);
-
-            const calculatedSoju = (totalMlDosu / sojuStandard).toFixed(2);
+            const sojuStandard = ((totalMlDosu/sojuMl)/sojuDosu).toFixed(2);
 
             document.getElementById('totalMl').innerText = totalMl.toFixed(2);
             document.getElementById('totalMlDosu').innerText = totalMlDosu.toFixed(2);
             document.getElementById('calculatedSoju').innerText = calculatedSoju;
-            document.getElementById('resultText').innerText = `소주 기준 ${calculatedSoju}만큼 마셨습니다.`;
+            document.getElementById('resultText').innerText = `소주 기준 ${sojuStandard}만큼 마셨습니다.`;
         }
 
         function addRow() {
@@ -220,12 +220,12 @@
                 <td>${rowCount}</td>
                 <td><input type="text" id="type${rowCount}" value=""></td>
                 <td><input type="number" id="dosu${rowCount}" value="0"></td>
-                <td><input type="number" id="ml${rowCount}" value="0" onchange="calculateRow(${
-<td><input type="number" id="bottle${rowCount}" value="0" onchange="calculateRow(${rowCount})"></td>
-<td id="mlBottle${rowCount}">0</td>
-<td id="mlDosu${rowCount}">0</td>
-<td><button class="delete-btn" onclick="deleteRow(${rowCount})">삭제</button></td>
-`;
+                <td><input type="number" id="ml${rowCount}" value="0" onchange="calculateRow(${rowCount})"></td>
+                <td><input type="number" id="bottle${rowCount}" value="0" onchange="calculateRow(${rowCount})"></td>
+                <td id="mlBottle${rowCount}">0</td>
+                <td id="mlDosu${rowCount}">0</td>
+                <td><button class="delete-btn" onclick="deleteRow(${rowCount})">삭제</button></td>
+            `;
         }
 
         function deleteRow(row) {
