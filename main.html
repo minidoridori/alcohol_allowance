@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sample HTML Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 20px;
+        }
+        .container {
+            max-width: 400px;
+            margin: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        label {
+            font-weight: bold;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+        button {
+            padding: 10px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <label for="textbox1">First Textbox:</label>
+        <input type="text" id="textbox1" name="textbox1" placeholder="Enter text here">
+
+        <label for="textbox2">Second Textbox:</label>
+        <input type="text" id="textbox2" name="textbox2" placeholder="Enter text here">
+
+        <button id="button1">Button 1</button>
+        <button id="button2">Button 2</button>
+    </div>
+
+    <script>
+        document.getElementById('button1').addEventListener('click', () => {
+            const textbox1Value = document.getElementById('textbox1').value;
+            alert(`Button 1 clicked! Textbox 1 value: ${textbox1Value}`);
+        });
+
+        document.getElementById('button2').addEventListener('click', () => {
+            const textbox2Value = document.getElementById('textbox2').value;
+            alert(`Button 2 clicked! Textbox 2 value: ${textbox2Value}`);
+        });
+    </script>
+</body>
+</html>
